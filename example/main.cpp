@@ -1,8 +1,10 @@
 #define USE_4_BIT_DATA_BUS 1
 
+#define LCD_GENERIC_USE_STRING 1
+
 #include "pico/stdlib.h"
-#include "../src/LCDbase.h"
-#include "../src/LCDgeneric.h"
+#include "LcdLib/LCDbase.h"
+#include "LcdLib/LCDgeneric.h"
 
 
 #pragma clang diagnostic push

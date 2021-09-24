@@ -1,14 +1,33 @@
 cmake_minimum_required(VERSION 3.16)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
+project(PicoLcdLib)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-add_executable(display "example/main.cpp" "src/LCDbase.cpp" "src/LCDbase.h" "src/LCDgeneric.cpp" "src/LCDgeneric.h")
+if (NOT DEFINED PICO_LCD_LIB_SEPARATE_HW_ACCESS)
+    set(PICO_LCD_LIB_SEPARATE_HW_ACCESS)
+endif ()
 
-target_link_libraries(display pico_stdlib)
+if (PICO_LCD_LIB_SEPARATE_HW_ACCESS EQUAL 1)
+    add_library(PicoLcdLibGpio include/LcdLib/LcdHardwareInterface.h
+            src/LcdHardwareGpio.cpp include/LcdLib/LcdHardwareGpio.h)
+    target_link_libraries(PicoLcdLibGpio pico_stdlib)
+    add_library(PicoLcdLibI2c include/LcdLib/LcdHardwareInterface.h
+            src/LcdHardwareI2c.cpp include/LcdLib/LcdHardwareI2c.h)
+    target_link_libraries(PicoLcdLibI2c pico_stdlib hardware_i2c)
 
-# enable usb output, disable uart output
-pico_enable_stdio_usb(display 1)
-pico_enable_stdio_uart(display 0)
+    add_library(PicoLcdLib "src/LCDbase.cpp" "include/LcdLib/LCDbase.h"
+            "src/LCDgeneric.cpp" "include/LcdLib/LCDgeneric.h"
+            include/LcdLib/LcdHardwareInterface.h)
 
-# create map/bin/hex/uf2 file in addition to ELF.
-pico_add_extra_outputs(display)
+    target_link_libraries(PicoLcdLib pico_stdlib)
+else ()
+    add_library(PicoLcdLib "src/LCDbase.cpp" "include/LcdLib/LCDbase.h"
+            "src/LCDgeneric.cpp" "include/LcdLib/LCDgeneric.h"
+            include/LcdLib/LcdHardwareInterface.h
+            src/LcdHardwareGpio.cpp include/LcdLib/LcdHardwareGpio.h
+            src/LcdHardwareI2c.cpp include/LcdLib/LcdHardwareI2c.h)
+
+    target_link_libraries(PicoLcdLib pico_stdlib hardware_i2c)
+endif ()
+

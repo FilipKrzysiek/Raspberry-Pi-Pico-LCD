@@ -2,12 +2,18 @@
 // Created by filip on 12.02.2021.
 //
 
-#ifndef BUTTON_FIRST_LCDBASE_H
-#define BUTTON_FIRST_LCDBASE_H
+#ifndef PICO_LCD_LIB_LCDBASE_H
+#define PICO_LCD_LIB_LCDBASE_H
 
 #ifndef USE_4_BIT_DATA_BUS
 #define USE_4_BIT_DATA_BUS 1
 #endif //USE_4_BIT_DATA_BUS
+
+#ifndef Use_I2C
+#define Use_I2C 0
+#else
+#define USE_4_BIT_DATA_BUS 1
+#endif //Use_I2C
 
 // Define commands and values
 #define LCD_CMD_CLEAR_SCREEN 0x01
@@ -54,6 +60,7 @@
 
 
 #include "pico/stdlib.h"
+#include "LcdHardwareInterface.h"
 
 class LCDbase {
 public:
@@ -61,25 +68,9 @@ public:
     enum State {ON, OFF};
     enum Font {STYLE_5x7, STYLE_5x10};
 
-    LCDbase(const uint &pinReadWrite, const uint &pinCommandData, const uint &pinEnable, const uint *pinData);
+    LCDbase(LcdHardwareInterface *lcdHardwareAccess);
 
-    LCDbase(const uint &pinCommandData, const uint &pinEnable, const uint *pinData);
-
-#if USE_4_BIT_DATA_BUS == 1
-    LCDbase(const uint &pinReadWrite, const uint &pinComandData, const uint &pinEnable, const uint &pinData0,
-            const uint &pinData1, const uint &pinData2, const uint &pinData3);
-
-    LCDbase(const uint &pinCommandData, const uint &pinEnable, const uint &pinData0, const uint &pinData1,
-            const uint &pinData2, const uint &pinData3);
-#else
-    LCDbase(const uint &pinReadWrite, const uint &pinComandData, const uint &pinEnable, const uint &pinData0,
-            const uint &pinData1, const uint &pinData2, const uint &pinData3, const uint &pinData4, const uint &pinData5,
-            const uint &pinData6, const uint &pinData7);
-
-    LCDbase(const uint &pinCommandData, const uint &pinEnable, const uint &pinData0, const uint &pinData1,
-            const uint &pinData2, const uint &pinData3, const uint &pinData4, const uint &pinData5, const uint &pinData6,
-            const uint &pinData7);
-#endif
+    virtual ~LCDbase();
 
     /**
      * Clear screen, delete anything, what was displayed on your screen
@@ -158,27 +149,11 @@ public:
 protected:
     unsigned short amountLines;
     unsigned short lineSize;
+    LcdHardwareInterface *hardwareAccess;
 
 private:
-#if USE_4_BIT_DATA_BUS == 1
-    uint PIN_DATA[4];
-#else
-    uint PIN_DATA[8];
-#endif
-
-    bool rwPinConnected = true;
-    const uint PIN_READ_WRITE = 255;
-    const uint PIN_COMMAND_DATA;
-    const uint PIN_ENABLE;
-
     uint8_t displayControlState = 0;
-
-    void putToGpio(uint8_t value, bool commandData, bool readWrite = false);
-
-    void enablePulse() const;
-
-    void putToGpio4Pin(uint8_t value);
 };
 
 
-#endif //BUTTON_FIRST_LCDBASE_H
+#endif //PICO_LCD_LIB_LCDBASE_H
