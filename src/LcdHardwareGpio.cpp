@@ -178,3 +178,21 @@ void LcdHardwareGpio::enablePulse() {
 LcdHardwareGpio::~LcdHardwareGpio() {
 
 }
+
+void LcdHardwareGpio::writeData4Bit(bool rs, bool rw, uint8_t data) {
+    gpio_put(PIN_COMMAND_DATA, rs);
+    if (rwPinConnected) gpio_put(PIN_READ_WRITE, rw);
+#if USE_4_BIT_DATA_BUS == 1
+    gpio_put(PIN_DATA[0], data & 1);
+    gpio_put(PIN_DATA[1], (data >> 1) & 1);
+    gpio_put(PIN_DATA[2], (data >> 2) & 1);
+    gpio_put(PIN_DATA[3], (data >> 3) & 1);
+    enablePulse();
+#else
+    gpio_put(PIN_DATA[4], data & 1);
+    gpio_put(PIN_DATA[5], (data >> 1) & 1);
+    gpio_put(PIN_DATA[6], (data >> 2) & 1);
+    gpio_put(PIN_DATA[7], (data >> 3) & 1);
+    enablePulse();
+#endif
+}

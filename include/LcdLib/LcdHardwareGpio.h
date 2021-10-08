@@ -54,6 +54,8 @@ public:
 
     void writeData(bool rs, bool rw, uint8_t data) override;
 
+    void writeData4Bit(bool rs, bool rw, uint8_t data) override;
+
     void enableBackLight() override;
 
     void disableBackLight() override;

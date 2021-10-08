@@ -17,13 +17,15 @@
 
 class LcdHardwareI2c: public LcdHardwareInterface {
 public:
-    LcdHardwareI2c(i2c_inst i2c, uint8_t i2cAddress, uint *pinI2C);
+    LcdHardwareI2c(i2c_inst *i2c, uint8_t i2cAddress, uint *pinI2C);
 
-    LcdHardwareI2c(i2c_inst i2c, uint8_t i2cAddress, uint pinI2C_1, uint pinI2C_2);
+    LcdHardwareI2c(i2c_inst_t *i2c, uint8_t i2cAddress, uint pinI2C_1, uint pinI2C_2);
 
     ~LcdHardwareI2c() override;
 
     void writeData(bool rs, bool rw, uint8_t data) override;
+
+    void writeData4Bit(bool rs, bool rw, uint8_t data) override;
 
     void enableBackLight() override;
 

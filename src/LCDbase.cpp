@@ -64,16 +64,16 @@ void LCDbase::initialize(unsigned short lineSize, unsigned short amountLines, LC
 
     sleep_ms(90);
 #if USE_4_BIT_DATA_BUS == 1
-    hardwareAccess->writeData(false, false, 0x30);
+    hardwareAccess->writeData4Bit(false, false, 0x3);
 
     sleep_ms(5);
-    hardwareAccess->writeData(false, false, 0x30);
+    hardwareAccess->writeData(false, false, 0x3);
 
     sleep_ms(5);
-    hardwareAccess->writeData(false, false, 0x30);
+    hardwareAccess->writeData(false, false, 0x3);
 
     sleep_us(200);
-    hardwareAccess->writeData(false, false, 0x20);
+    hardwareAccess->writeData(false, false, 0x2);
 
 #else
     hardwareAccess->writeData(false, false, 0x30);
@@ -86,8 +86,9 @@ void LCDbase::initialize(unsigned short lineSize, unsigned short amountLines, LC
 
 #endif
 
-    hardwareAccess->writeData(false, false, LCD_CMD_FUNCTION_SET | (lineSize == 1 ? LCD_FLG_CMD_FUNCTION_SET_1_LINE
-                                                                                  : LCD_FLG_CMD_FUNCTION_SET_2_LINE) |
+    hardwareAccess->writeData(false, false, LCD_CMD_FUNCTION_SET |
+                                            (lineSize == 1 ? LCD_FLG_CMD_FUNCTION_SET_1_LINE
+                                                           : LCD_FLG_CMD_FUNCTION_SET_2_LINE) |
                                             (font == STYLE_5x7 ? LCD_FLG_CMD_FUNCTION_SET_FONT_5x7
                                                                : LCD_FLG_CMD_FUNCTION_SET_FONT_5x10));
 
@@ -114,6 +115,6 @@ void LCDbase::defineChar(unsigned short location, uint8_t *dots) {
     cursorMoveToBasePoint();
 }
 
-void LCDbase::writeChar(uint16_t character) {
+void LCDbase::writeChar(uint8_t character) {
     hardwareAccess->writeData(true, false, character);
 }

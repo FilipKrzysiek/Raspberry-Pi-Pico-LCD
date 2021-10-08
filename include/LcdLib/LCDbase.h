@@ -144,7 +144,7 @@ public:
      * Write to screen passed character.
      * @param character that what you what to see on screen (remember of font table from your display specyfication)
      */
-    void writeChar(uint16_t character);
+    void writeChar(uint8_t character);
 
 protected:
     unsigned short amountLines;

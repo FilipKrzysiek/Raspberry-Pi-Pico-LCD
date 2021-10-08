@@ -11,6 +11,7 @@ protected:
     uint commandSleepTime = 600;
 public:
     virtual void writeData(bool rs, bool rw, uint8_t data) = 0;
+    virtual void writeData4Bit(bool rs, bool rw, uint8_t data) = 0;
     virtual void enableBackLight() = 0;
     virtual void disableBackLight() = 0;
      //TODO add read data
