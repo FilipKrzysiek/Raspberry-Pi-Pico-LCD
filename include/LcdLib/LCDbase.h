@@ -138,7 +138,7 @@ public:
      * @param location number of character (0 - 8)
      * @param dots array with 8 rows representing new character
      */
-    void defineChar(unsigned short location, uint8_t *dots);
+    void defineChar(unsigned short location, const uint8_t *dots);
 
     /**
      * Write to screen passed character.

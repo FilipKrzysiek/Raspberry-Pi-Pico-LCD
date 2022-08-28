@@ -104,7 +104,7 @@ void LCDbase::cursorMoveTo(uint8_t address) {
     hardwareAccess->writeData(false, false, LCD_CMD_SET_DDRAM | address);
 }
 
-void LCDbase::defineChar(unsigned short location, uint8_t *dots) {
+void LCDbase::defineChar(unsigned short location, const uint8_t *dots) {
     if (location > 8) location = location % 8;
     hardwareAccess->writeData(false, false, LCD_CMD_SET_CGRAM | (location << 3));
 
